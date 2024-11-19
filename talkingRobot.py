@@ -6,7 +6,7 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 from playsound import playsound
 
-Imagekey = moduleKey.myImageKey
+Imagekey = moduleKey.myImageKey # my key got changed
 
 # how to deal with voice inputs...
 
