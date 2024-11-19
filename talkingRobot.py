@@ -7,10 +7,12 @@ from PIL import Image, ImageTk
 from playsound import playsound
 import random as rd
 
-mlfk_key = moduleKey.key
+Imagekey = moduleKey.myImageKey # my key got changed
+
+# how to deal with voice inputs...
 
 # this will train your model and might take a little while
-myproject = MLforKidsImageProject(mlfk_key)
+myproject = MLforKidsImageProject(Imagekey)
 myproject.train_model()
 
 # example for data you want to input
