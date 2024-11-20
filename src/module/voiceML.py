@@ -15,19 +15,28 @@ def preprocess_audio(file_path):
     Load and preprocess audio using librosa.
     """
     y, _ = librosa.load(file_path, sr=16000)  # Load audio and resample to 16 kHz
+    max_length = 30 * 16000  # 30 seconds
+    y = librosa.util.fix_length(y, size=max_length)  # Pad or trim to 30 seconds
     return y
 
 def extract_whisper_features(audio):
     """
     Extract embeddings using Whisper's encoder.
     """
-    mel = whisper.log_mel_spectrogram(audio)
-    with torch.no_grad(): # torch.no_grad() -> for fast computation with with syntax
-        embeddings = model.encode(mel)
-    return embeddings.mean(dim=1).squeeze().numpy()  # Use mean pooling
+    mel = whisper.log_mel_spectrogram(audio)  # Generate log-Mel spectrogram
+    mel = mel.unsqueeze(0)  # Add batch dimension to make it (1, n_mels, time_steps)
+    
+    with torch.no_grad():  # Disable gradient computation
+        embeddings = model.encoder(mel.to(model.device))  # Pass through encoder
+    
+    # Use mean pooling along the time_steps dimension (dim=2)
+    return embeddings.mean(dim=2).squeeze().cpu().numpy()  # Convert to NumPy
+
 
 # Load your dataset
-data_dir = "src\\voices"
+data_dir = "C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\voices"
+
+# train session
 
 X, y = [], []
 for label, group in enumerate(["happy","sad","angry","anxious"]):
@@ -55,4 +64,34 @@ classifier.fit(X_train, y_train)
 y_pred = classifier.predict(X_test)
 print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
 
-joblib.dump(classifier, "audio_classifier.pkl")
+joblib.dump(classifier, "audio_classifier.pkl") # save model
+
+
+# test session
+
+
+# # Load the saved model
+# classifier = joblib.load("audio_classifier.pkl")
+
+# # Preprocess and extract features for the new audio
+# audio = preprocess_audio("test-soon-2.wav")
+# features = extract_whisper_features(audio)
+
+# # Reshape the features and make a prediction
+# features = features.reshape(1, -1)  # Ensure 2D input
+# predicted_label = classifier.predict(features)
+
+# # Map numeric label to class name
+# label_mapping = {0: "happy", 1: "sad", 2: "angry", 3: "anxious"}
+# print(f"Predicted class: {label_mapping[predicted_label[0]]}")
+
+
+# "빠른 갈색 여우가 게으른 개를 뛰어넘습니다."
+
+# "안녕하세요! 오늘 기분은 어떠신가요?"
+
+# "머신 러닝 모델은 라벨이 지정된 데이터셋을 사용하여 학습됩니다."
+
+# "오늘의 기온은 섭씨 23도입니다."
+
+# "와, 이게 실제로 일어나다니 믿을 수 없어요!"
