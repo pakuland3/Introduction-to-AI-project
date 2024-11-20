@@ -38,16 +38,17 @@ def getPrediction(path):
     classifier = joblib.load("audio_classifier.pkl")
 
     # Preprocess and extract features for the new audio
-    audio = preprocess_audio(path)
-    features = extract_whisper_features(audio)
+    if path:
+        audio = preprocess_audio(path)
+        features = extract_whisper_features(audio)
 
-    # Reshape the features and make a prediction
-    features = features.reshape(1, -1)  # Ensure 2D input
-    predicted_label = classifier.predict(features)
+        # Reshape the features and make a prediction
+        features = features.reshape(1, -1)  # Ensure 2D input
+        predicted_label = classifier.predict(features)
 
-    # Map numeric label to class name
-    label_mapping = {0: "happy", 1: "sad", 2: "angry", 3: "anxious"}
-    return label_mapping[predicted_label[0]]
+        # Map numeric label to class name
+        label_mapping = {0: "happy", 1: "sad", 2: "angry", 3: "anxious"}
+        return label_mapping[predicted_label[0]]
 
 # Load your dataset
 data_dir = "C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\voices"
