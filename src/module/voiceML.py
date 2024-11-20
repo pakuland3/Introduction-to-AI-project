@@ -33,38 +33,54 @@ def extract_whisper_features(audio):
     return embeddings.mean(dim=2).squeeze().cpu().numpy()  # Convert to NumPy
 
 
+def getPrediction(path):
+    # Load the saved model
+    classifier = joblib.load("audio_classifier.pkl")
+
+    # Preprocess and extract features for the new audio
+    audio = preprocess_audio(path)
+    features = extract_whisper_features(audio)
+
+    # Reshape the features and make a prediction
+    features = features.reshape(1, -1)  # Ensure 2D input
+    predicted_label = classifier.predict(features)
+
+    # Map numeric label to class name
+    label_mapping = {0: "happy", 1: "sad", 2: "angry", 3: "anxious"}
+    return label_mapping[predicted_label[0]]
+
 # Load your dataset
 data_dir = "C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\voices"
 
 # train session
 
-X, y = [], []
-for label, group in enumerate(["happy","sad","angry","anxious"]):
-    folder_path = os.path.join(data_dir, group)
-    for file_name in os.listdir(folder_path):
-        try:
-            audio = preprocess_audio(os.path.join(folder_path, file_name))
-            features = extract_whisper_features(audio)
-            X.append(features)
-            y.append(label)
-        except Exception as e:
-            print(f"Error processing {file_name}: {e}")
+# X, y = [], []
+# for label, group in enumerate(["happy","sad","angry","anxious"]):
+#     folder_path = os.path.join(data_dir, group)
+#     for file_name in os.listdir(folder_path):
+#         try:
+#             audio = preprocess_audio(os.path.join(folder_path, file_name))
+#             features = extract_whisper_features(audio)
+#             X.append(features)
+#             y.append(label)
+#         except Exception as e:
+#             print(f"Error processing {file_name}: {e}")
 
-# Convert to arrays
-X, y = np.array(X), np.array(y)
+# # Convert to arrays
+# X, y = np.array(X), np.array(y)
 
-# Split into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# # Split into training and testing sets
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train a Random Forest Classifier
-classifier = RandomForestClassifier(n_estimators=100, random_state=42)
-classifier.fit(X_train, y_train)
+# # Train a Random Forest Classifier
+# classifier = RandomForestClassifier(n_estimators=100, random_state=42)
+# classifier.fit(X_train, y_train)
 
-# Make predictions and evaluate
-y_pred = classifier.predict(X_test)
-print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+# # Make predictions and evaluate
+# y_pred = classifier.predict(X_test)
+# print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
 
-joblib.dump(classifier, "audio_classifier.pkl") # save model
+# joblib.dump(classifier, "audio_classifier.pkl") # save model
 
 
 # test session

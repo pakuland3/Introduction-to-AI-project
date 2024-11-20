@@ -1,5 +1,5 @@
 from src.module.mlforkidsimages import MLforKidsImageProject
-# from src.module.voiceML import vML
+from src.module.voiceML import getPrediction
 import src.module.key as moduleKey
 import tkinter as tk
 from tkinter import filedialog
@@ -51,6 +51,13 @@ def open_audio():
         title="감정을 고르세요!",
         filetypes=[("Audio files", "*.wav *.mp3")]
     )
+    if path:
+        predictionString=getPrediction(path)
+        
+
+    else:
+        print("path is inavailable.\nplease open file again")
+
     
 main=tk.Tk()
 main.title("나만의 로봇 친구")
@@ -62,21 +69,24 @@ main.attributes("-fullscreen", False)
 
 canvas=tk.Canvas(main,width=800,height=650)
 
-displayImage={"normal":genImage("C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\images\\normal.webp",(600,600)),
+displayImage={
+              "normal":genImage("C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\images\\normal.webp",(600,600)),
               "happy":genImage("C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\images\\happy.webp",(600,600)),
               "sad":genImage("C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\images\\sad.webp",(600,600)),
               "angry":genImage("C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\images\\angry.webp",(600,600)),
               "anxious":genImage("C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\images\\anxious.webp",(600,600))
 }
 
-displayImageId={"normal":0,
+displayImageId={
+              "normal":0,
               "happy":0,
               "sad":0,
               "angry":0,
               "anxious":0
 }
 
-displayText={"greet":["안녕하세요! 지금 기분이 어떠신가요?"],
+displayText={
+            "greet":["안녕하세요! 지금 기분이 어떠신가요?"],
             "happy":["정말 행복한 하루를 보내고 계신 것 같아요! 더 듣고 싶어요. 어떤 일이 있었나요?",
                      "와, 정말 멋진 이야기네요! 이런 기쁜 일이 더 많이 생기길 바래요.",
                      "웃는 얼굴을 보니 저도 덩달아 행복해져요. 오늘 더 즐겁게 지내세요!",
@@ -106,7 +116,8 @@ displayText={"greet":["안녕하세요! 지금 기분이 어떠신가요?"],
             ]
 }
 
-displayTextId={"greet":["안녕하세요! 지금 기분이 어떠신가요?"],
+displayTextId={
+            "greet":["안녕하세요! 지금 기분이 어떠신가요?"],
             "happy":["정말 행복한 하루를 보내고 계신 것 같아요! 더 듣고 싶어요. 어떤 일이 있었나요?",
                      "와, 정말 멋진 이야기네요! 이런 기쁜 일이 더 많이 생기길 바래요.",
                      "웃는 얼굴을 보니 저도 덩달아 행복해져요. 오늘 더 즐겁게 지내세요!",
@@ -134,6 +145,10 @@ displayTextId={"greet":["안녕하세요! 지금 기분이 어떠신가요?"],
                 "어떤 걱정이든 혼자 느끼지 않으셔도 돼요. 제가 여기 있어요.",
                 "지금은 조금 불안하셔도, 제가 있으면 안심이 될 거예요."
             ]
+}
+
+playingAudios={
+
 }
 
 # if button pressed then image's prediction saved to variable inputImage
