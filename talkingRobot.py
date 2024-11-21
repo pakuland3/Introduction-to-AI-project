@@ -53,8 +53,14 @@ def open_audio():
     )
     if path:
         predictionString=getPrediction(path)
-        
-
+        for name in displayImage.keys():
+            canvas.itemconfig(displayImageId[name],state="hidden")
+        canvas.itemconfig(displayImageId[predictionString],state="normal")
+        for name in displayText.keys():
+            for i in range(len(displayText[name])):
+                canvas.itemconfig(displayTextId[name][i],state="hidden")
+        idx=rd.randint(0,4)
+        canvas.itemconfig(displayTextId[predictionString][idx],state="normal")
     else:
         print("path is inavailable.\nplease open file again")
 
@@ -117,6 +123,14 @@ displayText={
 }
 
 displayTextId={
+            "greet":[0],
+            "happy":[0,0,0,0,0],
+            "sad":[0,0,0,0,0],
+            "angry":[0,0,0,0,0],
+            "anxious":[0,0,0,0,0]
+}
+
+textAudios={
             "greet":["안녕하세요! 지금 기분이 어떠신가요?"],
             "happy":["정말 행복한 하루를 보내고 계신 것 같아요! 더 듣고 싶어요. 어떤 일이 있었나요?",
                      "와, 정말 멋진 이야기네요! 이런 기쁜 일이 더 많이 생기길 바래요.",
@@ -145,10 +159,6 @@ displayTextId={
                 "어떤 걱정이든 혼자 느끼지 않으셔도 돼요. 제가 여기 있어요.",
                 "지금은 조금 불안하셔도, 제가 있으면 안심이 될 거예요."
             ]
-}
-
-playingAudios={
-
 }
 
 # if button pressed then image's prediction saved to variable inputImage
