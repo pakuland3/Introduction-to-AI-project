@@ -1,9 +1,9 @@
-import os
+# import os
 import whisper
 import librosa
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+# from sklearn.model_selection import train_test_split
+# from sklearn.ensemble import RandomForestClassifier
+# from sklearn.metrics import accuracy_score
 import torch
 import numpy as np
 import joblib
@@ -35,7 +35,10 @@ def extract_whisper_features(audio):
 
 def getPrediction(path):
     # Load the saved model
-    classifier = joblib.load("audio_classifier.pkl")
+    if __name__=="__main__":
+        classifier = joblib.load("audio_classifier.pkl")
+    else:
+        classifier = joblib.load("src\\module\\audio_classifier.pkl")
 
     # Preprocess and extract features for the new audio
     if path:
@@ -51,7 +54,7 @@ def getPrediction(path):
         return label_mapping[predicted_label[0]]
 
 # Load your dataset
-data_dir = "C:\\codes\\ProblemSolving\\Introduction-to-AI-project\\src\\voices"
+data_dir = "..\\training sources"
 
 # train session
 
