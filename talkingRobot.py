@@ -25,7 +25,7 @@ def renew(emotion):
     canvas.itemconfig(imageId,image=displayImage[emotion])
     idx=rd.randint(0,4)
     canvas.itemconfig(textId,text=displayText[emotion][idx])
-    playsound(textAudios[emotion][idx])
+    main.after(1500,lambda:playsound(textAudios[emotion][idx]))
 
 def open_image():
     path = filedialog.askopenfilename(
@@ -146,6 +146,6 @@ canvas.pack(side="top")
 btn_open_image.pack(side="left")
 btn_open_audio.pack(side="right")
 
-playsound(textAudios["greet"][0])
+main.after(3500,lambda:playsound(textAudios["greet"][0]))
 
 main.mainloop()
